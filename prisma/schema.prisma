@@ -1,0 +1,42 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+//Cria um arquivo específico, ex: "file:./dev.db"
+datasource db {
+  provider = "sqlite"
+  url      = "file:./dev.db"
+}
+
+//model cria tabelas no banco de dados
+model User {
+  id        String   @id @default(cuid())
+  name      String?
+  email     String?  @unique
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  address Address[]
+}
+
+model Address {
+  id          String   @id @default(cuid())
+  cep         String
+  logradouro  String
+  nr          String
+  cidade      String
+  estado      String
+  complemento String?
+  userId      String
+  actived     Boolean
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
